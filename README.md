@@ -1,3 +1,22 @@
+<style TYPE="text/css">
+code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+</style>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
+    }
+});
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
+
 **Advanced Lane Finding Project**
 
 The goals / steps of this project are the following:
@@ -13,13 +32,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/undistort_output.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[image7]: ./examples/example_output.jpg "Output"
+[image1]: ./output_images/undistorted_images/chessboard.jpg "Undistorted"
+[image2]: ./output_images/undistorted_images/test_image.jpg "Road Transformed"
+[image3]: ./output_images/combined_color_gradient/test3.jpg "Binary Example"
+[image4]: ./output_images/perspective_transform/sample.jpg "Warp Example"
+[image5]: ./output_images/sliding_window/test3.jpg "Fit Visual"
+[image6]: ./output_images/search_around_poly/test3.jpg "Search Around Poly"
+[image7]: ./output_images/drawing_with_measurements/test4.jpg "Output"
 [video1]: ./output_videos/project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -195,7 +214,8 @@ An example of the result is below.
 I've applied all of the methods above to a test video in 34th code cell of the IPython notebook.
 
 Here's a [link to my video result](./output_videos/project_video.mp4)
-![alt text][video1]
+
+Here's a [youtube link to my video result](https://www.youtube.com/watch?v=iFZfwwBY6fI)
 ---
 
 ### Discussion
