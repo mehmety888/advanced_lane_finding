@@ -1,22 +1,3 @@
-<style TYPE="text/css">
-code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
-</style>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [['$','$'], ['\\(','\\)']],
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
-    }
-});
-MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i = 0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-});
-</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
-
 **Advanced Lane Finding Project**
 
 The goals / steps of this project are the following:
@@ -38,7 +19,9 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/perspective_transform/sample.jpg "Warp Example"
 [image5]: ./output_images/sliding_window/test3.jpg "Fit Visual"
 [image6]: ./output_images/search_around_poly/test3.jpg "Search Around Poly"
-[image7]: ./output_images/drawing_with_measurements/test4.jpg "Output"
+[image7]: ./output_images/color-fit-lines.jpg "Search Around Poly"
+[image8]: ./output_images/formula.png "Search Around Poly"
+[image9]: ./output_images/drawing_with_measurements/test4.jpg "Output"
 [video1]: ./output_videos/project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -174,11 +157,11 @@ Here is an example of searching around poly below.
 
 I fitted lane lines to 2nd order polynomial. The function of second order polynomial is:
 
-$$f(y)=Ay^2+By+C$$
+![alt text][image7]
 
 Using the polynomial constants the radius of curvature can be calculated using the formula below. There is a proof [in this link.](https://www.intmath.com/applications-differentiation/8-radius-curvature.php)
 
-$$R_{curve}={(1+(2Ay+B)^2)^3/2 \over |2a|}$$
+![alt text][image8]
 
 Firstly I've calculated radius of curvature in terms of pixel values. I used a function named `measure_curvature_pixels` at 20th code cell of the IPython notebook.  
 
@@ -205,13 +188,22 @@ I, then used `cv2.putText` in 28.th code cell in IPython notebook to write mean 
 
 An example of the result is below.
 
-![alt text][image6]
+![alt text][image9]
 
 ---
 
 ### Pipeline (video)
 
 I've applied all of the methods above to a test video in 34th code cell of the IPython notebook.
+
+In addition, I've checked if the detection makes sense. (if detected lane lines are real lane lines) I've done this sanity check in code line 31: `sanity_check` in IPython notebook.
+
+I've checked:
+* If left line and right line have similar curvature
+* If lines are separated by approximately the right distance horizontally
+* If they are roughly parallel
+
+I also save the last 5 iterations in Class called `Line` in IPython notebook code line 30. Then I averaged them to get smooth looking lines (otherwise line detections will jump around from frame to frame a bit.)  
 
 Here's a [link to my video result](./output_videos/project_video.mp4)
 
@@ -220,6 +212,23 @@ Here's a [youtube link to my video result](https://www.youtube.com/watch?v=iFZfw
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+I've tried this approach on two challenge videos:
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here's a [link to challenge video](./challenge_video.mp4)
+Here's a [link to harder challenge video](./harder_challenge_video.mp4)
+
+First of all, my pipeline and detected lines cannot pass from sanity check.
+
+* It follows asphalt repair line, if repair line is close to vertical.
+* It deviates a little when there is different asphalt color.(It finds road irregularities as lane locations)
+* It fails when there is shadow on the road.
+* When radius of curvature is low (sharp turns) it fails.
+* Sometimes some of the lane lines cannot observed in videos. It completely loose its track
+
+##### Possible Improvements
+
+* Color and gradient thresholds may be tuned to get clear output at different road conditions
+* In addition to sanity check for each image using left and right images, it will be best to have a sanity check for consecutive left or right lane detections
+* It would be nice to add a region of interest to eliminate incorrect lane detections.
+* The size of sliding windows can be checked or the position of x values found in histogram may be checked before starting line fitting.
+* To improve pipeline, it would be best to remove sanity check and to take screenshots of video where the algorithm fails.
